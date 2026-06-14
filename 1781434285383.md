@@ -1,0 +1,40 @@
+# Pima Indians Diabetes - EDA & Classification
+
+[cite_start]Exploratory Data Analysis and Machine Learning models to predict diabetes diagnoses using the Pima Indians Diabetes dataset from Kaggle[cite: 4, 9].
+
+## Dataset Overview
+[cite_start]The dataset contains medical diagnostic records for 768 individuals[cite: 9, 150]:
+* [cite_start]**Pregnancies**: Number of times pregnant[cite: 14].
+* [cite_start]**Glucose**: Plasma glucose concentration at 2 hours in an oral glucose tolerance test[cite: 15].
+* [cite_start]**BloodPressure**: Diastolic blood pressure (mm Hg)[cite: 17].
+* [cite_start]**SkinThickness**: Triceps skin fold thickness (mm)[cite: 18].
+* [cite_start]**Insulin**: 2-Hour serum insulin (mu U/ml)[cite: 19].
+* [cite_start]**BMI**: Body mass index[cite: 20].
+* [cite_start]**DiabetesPedigreeFunction**: Genetic predisposition score[cite: 21, 1424].
+* [cite_start]**Age**: Age in years[cite: 21].
+* [cite_start]**Outcome**: Target class variable (0 = No diabetes, 1 = Diabetes)[cite: 23].
+
+## Data Cleaning & Preprocessing
+* [cite_start]**Missing Values**: Invalid `0` values in physiological metrics were replaced with `NaN`[cite: 197, 199].
+* **Imputationsamplers**: 
+  * [cite_start]`Glucose` and `BloodPressure` were filled via a Truncated Normal Distribution based on feature means and standard deviations[cite: 233, 249, 306, 315].
+  * [cite_start]`SkinThickness`, `Insulin`, and `BMI` were filled using median values conditioned on the target `Outcome`[cite: 381, 442, 474].
+* [cite_start]**Outliers**: Dropped values outside the 1.5 IQR threshold across continuous columns[cite: 581, 783, 801, 802].
+* [cite_start]**Feature Engineering**: Used `pd.cut()` to generate binned categories for `AgeGroup` (20–89) and `BMICategory` (Underweight to Obese III)[cite: 1012, 1025, 1029, 1031].
+* [cite_start]**Transformations**: Implemented One-Hot Encoding for multi-value columns, Label Encoding for binary features, and standardized numerical data via `StandardScaler`[cite: 1041, 1043, 1044, 1048, 1050, 1052].
+* [cite_start]**Class Imbalance**: Applied SMOTE to oversample the minority class within the training split[cite: 1334, 1335, 1338].
+
+## Model Training & Performance
+[cite_start]Data was partitioned into stratified Training (60%), Validation (20%), and Testing (20%) sets[cite: 1155, 1159, 1160, 1161, 1176]. [cite_start]Models were optimized using `GridSearchCV` with 5-fold cross-validation[cite: 1190, 1213, 1228].
+
+### Test Set Metrics
+
+| Model | Test Accuracy | Test ROC-AUC |
+| :--- | :---: | :---: |
+| Logistic Regression | [cite_start]76.62% [cite: 1354] | [cite_start]0.8441 [cite: 1351] |
+| Decision Tree | [cite_start]83.76% [cite: 1354] | [cite_start]0.8607 [cite: 1352] |
+| **Random Forest** | [cite_start]**87.01%** [cite: 1354] | [cite_start]**0.9402** [cite: 1353] |
+
+## Key Findings
+* [cite_start]**Feature Importance**: `Insulin` was the top predictor by a large margin (importance score > 0.4), followed by `Glucose` and `SkinThickness`[cite: 1466, 1468, 1469].
+* [cite_start]**Granularity**: Raw continuous metrics provided significantly stronger predictive value to the tree-based models than the engineered categorical brackets[cite: 1489].
